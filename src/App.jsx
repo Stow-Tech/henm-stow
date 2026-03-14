@@ -77,7 +77,7 @@ export default function App() {
     },
 
     {
-      title: "TECHNICAL VOCABULARY 3RD YEAR",
+      title: "TECH VOCAB 3RD YEAR",
       desc: "SEARCH-RESCUE",
       file: "modules/search-rescue.html"
     },
