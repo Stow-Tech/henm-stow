@@ -202,21 +202,21 @@ TRAINING DOCK
 
 {/* MODULE GRID */}
 
-<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8">
 
 {trainingDocks.map((dock,i)=>(
 
 <div
 key={i}
-className="bg-[#122843] border border-[#c5a059] aspect-square flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition"
+className="bg-[#122843] border border-[#c5a059] aspect-square flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition p-2"
 onClick={()=>setModule(dock.file)}
 >
 
-<h3 className="text-xl font-bold text-[#c5a059] mb-2">
+<h3 className="text-sm md:text-lg lg:text-xl font-bold text-[#c5a059] mb-1 break-words">
 {dock.title}
 </h3>
 
-<p className="opacity-60">
+<p className="opacity-60 text-xs md:text-sm break-words">
 {dock.desc}
 </p>
 
@@ -253,7 +253,7 @@ Enlist Asset
 
 </h2>
 
-<div className="grid grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
 <input
 placeholder="Name"
