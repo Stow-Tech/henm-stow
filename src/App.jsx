@@ -84,7 +84,7 @@ export default function App() {
     
 {
   title: "SPEAK LIKE A PRO",
-  desc: "B2 ALMOST-INTERMEDIATE",
+  desc: "B2 ALMOST-INTERMEDIATE...",
   file: "modules/speak-pro.html"
 },
     {
