@@ -83,9 +83,9 @@ export default function App() {
     },
     
 {
-  title: "COMING SOON",
-  desc: "Unblock 3rd Evaluation",
-  file: "modules/connectors-basic.html"
+  title: "SPEAK LIKE A PRO",
+  desc: "B2 ALMOST-INTERMEDIATE",
+  file: "modules/speak-pro.html"
 },
     {
       title: "COMING SOON",
