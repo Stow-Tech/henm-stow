@@ -71,20 +71,20 @@ export default function App() {
   const trainingDocks = [
 
     {
-      title: "VOCABULARY 2ND AND 3RD YEAR",
+      title: "VOCAB 2ND-3RD YEAR",
       desc: "NATO, FLAG, RENT A HOUSE",
       file: "modules/nato-flag.html"
     },
 
     {
       title: "TECHNICAL VOCABULARY 3RD YEAR",
-      desc: "SEARCH AND RESCUE",
+      desc: "SEARCH-RESCUE",
       file: "modules/search-rescue.html"
     },
     
 {
-  title: "CONNECTORS",
-  desc: "Vocabulary: Connectors in English",
+  title: "COMING SOON",
+  desc: "Unblock 3rd Evaluation",
   file: "modules/connectors-basic.html"
 },
     {
