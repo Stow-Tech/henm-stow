@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HENM Module Generator</title>
+<style>
+body{font-family:sans-serif;padding:20px;background:#0e1f34;color:white}
+textarea{width:100%;height:200px;margin-bottom:10px}
+button{padding:10px 20px;font-size:16px}
+pre{background:#122843;padding:15px;white-space:pre-wrap;border:1px solid #c5a059}
+</style>
+</head>
+<body>
+
+<h2>Flashcard Module Generator</h2>
+
+<p>Paste vocabulary in this format:</p>
+<label>Module File Name:</label>
+<input id="moduleName" placeholder="example: vocab-nato" style="width:100%;padding:8px;margin-bottom:10px;">
+<label>Module Type:</label>
+<select id="moduleType" style="width:100%;padding:8px;margin-bottom:10px;">
+<option value="vocab">Vocabulary</option>
+<option value="grammar">Grammar</option>
+<option value="listening">Listening</option>
+<option value="interview">Interview</option>
+</select>
+
+<textarea id="input" placeholder="Word | Definition"></textarea>
+
+<button onclick="generate()">Generate Module</button>
+<button onclick="downloadModule()">Download Module</button>
+
+<h3>Generated HTML</h3>
+<pre id="output"></pre>
+<script>
+
+function generate(){
+
+const text = document.getElementById("input").value.trim()
+
+if(!text){
+alert("Paste vocabulary first")
+return
+}
+
+const lines = text.split("\n")
+
+const cards = lines.map(line => {
+
+const parts = line.split("|")
+
+if(parts.length < 2) return ""
+
+return `{question:"${parts[0].trim()}",answer:"",report:"${parts[1].trim()}"}`
+
+}).filter(Boolean).join(",\n")
+
+document.getElementById("output").textContent = cards
+
+}
+
+function downloadModule(){
+const type = document.getElementById("moduleType").value
+
+if(!window.generatedCards){
+alert("Generate module first")
+return
+}
+
+const html = `
+
+<style>
+body{background:#0e1f34;color:white;font-family:sans-serif;text-align:center}
+.card{cursor:pointer}
+</style>
+
+<div class="study-wrapper">
+
+<h2>${type.toUpperCase()} MISSION</h2>
+
+<div class="card-container">
+<div id="card" onclick="flipCard()">
+
+<div id="question"></div>
+<div id="report"></div>
+
+</div>
+</div>
+
+<button onclick="prevCard()">Previous</button>
+<button onclick="nextCard()">Next</button>
+
+</div>
+
+<script>
+
+const cards = [
+
+${window.generatedCards}
+
+]
+
+let current = 0
+
+function render(){
+
+const question = document.getElementById("question")
+const report = document.getElementById("report")
+
+if(!question || !report) return
+
+report.style.display = "none"
+
+question.innerHTML =
+"<strong style='font-size:26px'>" + cards[current].question + "</strong>"
+report.innerHTML =
+cards[current].report
+
+}
+
+function nextCard(){
+current=(current+1)%cards.length
+render()
+}
+
+function prevCard(){
+current=(current-1+cards.length)%cards.length
+render()
+}
+
+function flipCard(){
+const r=document.getElementById("report")
+r.style.display = r.style.display==="none"?"block":"none"
+}
+
+render()
+
+<\/script>
+
+`
+
+const blob = new Blob([html], {type:"text/html"})
+const link = document.createElement("a")
+
+link.href = URL.createObjectURL(blob)
+const name = document.getElementById("moduleName").value.trim()
+
+const fileName = name ? name + ".html" : "vocab-module.html"
+
+link.download = fileName
+
+link.click()
+
+}
+
+</script>

@@ -1,0 +1,327 @@
+<style>
+
+/* ===============================
+WRAPPER
+================================ */
+
+.study-wrapper{
+max-width:700px;
+margin:40px auto;
+text-align:center;
+color:white;
+}
+
+.study-wrapper h2{
+margin-bottom:15px;
+letter-spacing:2px;
+}
+
+
+/* ===============================
+CARD CONTAINER
+================================ */
+
+.card-container{
+perspective:1000px;
+height:260px;
+margin-top:10px;
+}
+
+
+/* ===============================
+CARD
+================================ */
+
+.card{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform .6s;
+cursor:pointer;
+}
+
+.card.flipped{
+transform:rotateY(180deg);
+}
+
+
+/* ===============================
+CARD SIDES
+================================ */
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+
+background:#122843;
+border:1px solid #c5a059;
+border-radius:10px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:40px;
+font-size:22px;
+}
+
+.card-back{
+transform:rotateY(180deg);
+}
+
+
+/* ===============================
+CONTENT
+================================ */
+
+.card-content{
+max-width:500px;
+line-height:1.5;
+}
+
+
+/* ===============================
+CONTROLS
+================================ */
+
+.controls{
+margin-top:30px;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+background:#c5a059;
+border:none;
+padding:12px 28px;
+font-weight:bold;
+cursor:pointer;
+border-radius:6px;
+font-size:16px;
+}
+
+button:hover{
+opacity:.9;
+}
+
+
+/* ===============================
+PROGRESS
+================================ */
+
+.progress-container{
+margin-bottom:20px;
+}
+
+.progress-info{
+margin-bottom:6px;
+font-size:14px;
+opacity:.9;
+}
+
+.progress-bar{
+width:100%;
+height:8px;
+background:#0c1d32;
+border-radius:4px;
+overflow:hidden;
+border:1px solid #c5a05955;
+}
+
+#progressFill{
+height:100%;
+width:0%;
+background:#c5a059;
+transition:width .3s;
+}
+/* ===============================
+SECTION LABEL
+================================ */
+
+.section-label{
+margin-bottom:12px;
+font-size:14px;
+letter-spacing:1px;
+color:#c5a059;
+opacity:.9;
+}
+
+</style>
+
+<div class="study-wrapper">
+
+<h2>VOCABULARY</h2>
+<div class="progress-container">
+
+<div class="progress-info">
+<span id="progressText"></span>
+</div>
+
+<div class="progress-bar">
+<div id="progressFill"></div>
+</div>
+</div>
+
+<div id="sectionLabel" class="section-label"></div>
+
+<div class="card-container">
+
+<div id="card" class="card" onclick="flipCard()">
+
+<div class="card-face">
+<div class="card-content" id="question">
+
+<strong>Mission</strong><br><br>
+Loading mission... Click next!
+
+</div>
+</div>
+
+<div class="card-face card-back">
+<div class="card-content" id="report"></div>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="controls">
+
+<button onclick="prevCard()">← Previous</button>
+
+<button onclick="nextCard()">Next →</button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+(function(){
+
+/* ===============================
+FLASHCARD DATA
+================================ */
+
+const cards = [
+
+
+]
+
+let current = 0
+
+
+/* ===============================
+RENDER
+================================ */
+
+function render(){
+
+const question = document.getElementById("question")
+const report = document.getElementById("report")
+const card = document.getElementById("card")
+
+if(!question || !report || !card) return
+
+question.innerHTML = `
+<strong>${cards[current].question}</strong>
+`
+
+report.innerHTML = `
+${cards[current].report}
+`
+
+card.classList.remove("flipped")
+
+const progressText = document.getElementById("progressText")
+const progressFill = document.getElementById("progressFill")
+
+if(progressText && progressFill){
+
+progressText.textContent = `Card ${current+1} / ${cards.length}`
+
+const percent = ((current+1)/cards.length)*100
+progressFill.style.width = percent + "%"
+
+}
+
+}
+
+
+/* ===============================
+FLIP
+================================ */
+
+window.flipCard = function(){
+const card = document.getElementById("card")
+if(card) card.classList.toggle("flipped")
+}
+
+
+/* ===============================
+NEXT / PREVIOUS
+================================ */
+
+window.nextCard = function(){
+
+current++
+
+if(current >= cards.length){
+current = 0
+}
+
+render()
+
+}
+
+window.prevCard = function(){
+
+current--
+
+if(current < 0){
+current = cards.length - 1
+}
+
+render()
+
+}
+
+
+/* ===============================
+KEYBOARD CONTROLS
+================================ */
+
+function handleKeys(e){
+
+if(e.code === "Space"){
+e.preventDefault()
+flipCard()
+}
+
+if(e.code === "ArrowRight"){
+nextCard()
+}
+
+if(e.code === "ArrowLeft"){
+prevCard()
+}
+
+}
+
+document.addEventListener("keydown", handleKeys)
+
+
+/* ===============================
+START
+================================ */
+
+render()
+
+})();
+</script>

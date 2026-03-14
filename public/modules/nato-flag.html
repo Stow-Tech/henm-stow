@@ -1,0 +1,409 @@
+<style>
+
+/* ===============================
+WRAPPER
+================================ */
+
+.study-wrapper{
+max-width:700px;
+margin:40px auto;
+text-align:center;
+color:white;
+}
+
+.study-wrapper h2{
+margin-bottom:15px;
+letter-spacing:2px;
+}
+
+
+/* ===============================
+CARD CONTAINER
+================================ */
+
+.card-container{
+perspective:1000px;
+height:260px;
+margin-top:10px;
+}
+
+
+/* ===============================
+CARD
+================================ */
+
+.card{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform .6s;
+cursor:pointer;
+}
+
+.card.flipped{
+transform:rotateY(180deg);
+}
+
+
+/* ===============================
+CARD SIDES
+================================ */
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+
+background:#122843;
+border:1px solid #c5a059;
+border-radius:10px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+padding:40px;
+font-size:22px;
+}
+
+.card-back{
+transform:rotateY(180deg);
+}
+
+
+/* ===============================
+CONTENT
+================================ */
+
+.card-content{
+max-width:500px;
+line-height:1.5;
+}
+
+
+/* ===============================
+CONTROLS
+================================ */
+
+.controls{
+margin-top:30px;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+background:#c5a059;
+border:none;
+padding:12px 28px;
+font-weight:bold;
+cursor:pointer;
+border-radius:6px;
+font-size:16px;
+}
+
+button:hover{
+opacity:.9;
+}
+
+
+/* ===============================
+PROGRESS
+================================ */
+
+.progress-container{
+margin-bottom:20px;
+}
+
+.progress-info{
+margin-bottom:6px;
+font-size:14px;
+opacity:.9;
+}
+
+.progress-bar{
+width:100%;
+height:8px;
+background:#0c1d32;
+border-radius:4px;
+overflow:hidden;
+border:1px solid #c5a05955;
+}
+
+#progressFill{
+height:100%;
+width:0%;
+background:#c5a059;
+transition:width .3s;
+}
+/* ===============================
+SECTION LABEL
+================================ */
+
+.section-label{
+margin-bottom:12px;
+font-size:14px;
+letter-spacing:1px;
+color:#c5a059;
+opacity:.9;
+}
+
+</style>
+
+<div class="study-wrapper">
+
+<h2>VOCABULARY</h2>
+<div class="progress-container">
+
+<div class="progress-info">
+<span id="progressText"></span>
+</div>
+
+<div class="progress-bar">
+<div id="progressFill"></div>
+</div>
+</div>
+
+<div id="sectionLabel" class="section-label"></div>
+
+<div class="card-container">
+
+<div id="card" class="card" onclick="flipCard()">
+
+<div class="card-face">
+<div class="card-content" id="question">
+
+<strong>Mission</strong><br><br>
+Loading mission... Click next!
+
+</div>
+</div>
+
+<div class="card-face card-back">
+<div class="card-content" id="report"></div>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="controls">
+
+<button onclick="prevCard()">← Previous</button>
+
+<button onclick="nextCard()">Next →</button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+(function(){
+
+/* ===============================
+FLASHCARD DATA
+================================ */
+
+const cards = [
+
+{question:"Press briefing",answer:"",report:"A meeting where officials give information to journalists."},
+{question:"Spokesperson",answer:"",report:"A person who officially speaks for an organization or government."},
+{question:"Schedule",answer:"",report:"A plan that shows when activities or events will happen."},
+{question:"Position",answer:"",report:"A job or role in an organization."},
+{question:"Officials",answer:"",report:"People who hold important positions in government or institutions."},
+{question:"European Union",answer:"",report:"A political and economic union of European countries."},
+{question:"Occasion",answer:"",report:"A special event or moment."},
+{question:"Formal",answer:"",report:"Official and following established rules or procedures."},
+{question:"Government",answer:"",report:"The system that manages and controls a country."},
+{question:"President",answer:"",report:"The elected leader of a country or organization."},
+{question:"Training",answer:"",report:"The process of learning skills for a job or activity."},
+{question:"Nation",answer:"",report:"A country and the people who live in it."},
+{question:"Gather",answer:"",report:"To come together in a group."},
+{question:"International",answer:"",report:"Involving two or more countries."},
+{question:"Informal",answer:"",report:"Relaxed and not following strict rules."},
+{question:"Meeting",answer:"",report:"An event where people come together to discuss something."},
+{question:"Headquarters",answer:"",report:"The main office of an organization."},
+{question:"Participate",answer:"",report:"To take part in an activity or event."},
+{question:"Commander",answer:"",report:"A military officer with authority over others."},
+{question:"Joint Force Command",answer:"",report:"A military command involving forces from different services or countries."},
+{question:"Official statement",answer:"",report:"A formal public announcement made by authorities."},
+{question:"Announcement",answer:"",report:"A public statement that gives information."},
+{question:"Confirm",answer:"",report:"To verify or say that something is true."},
+{question:"Briefing",answer:"",report:"A short meeting where information or instructions are given."},
+{question:"Security",answer:"",report:"Protection against danger or threats."},
+
+{question:"Symbol",answer:"",report:"Something that represents an idea, belief, or nation."},
+{question:"Nation",answer:"",report:"A country and its people."},
+{question:"Flown",answer:"",report:"Displayed on a flagpole."},
+{question:"Customs",answer:"",report:"Traditional practices followed by a group of people."},
+{question:"Courtesies",answer:"",report:"Polite actions that show respect."},
+{question:"Respect",answer:"",report:"A feeling of admiration or honor for someone or something."},
+{question:"Salute",answer:"",report:"A formal gesture of respect in the military."},
+{question:"Parade",answer:"",report:"A formal procession or public ceremony."},
+{question:"Attention",answer:"",report:"A formal standing posture used in the military."},
+{question:"Position of honor",answer:"",report:"The most respected place during a ceremony."},
+{question:"Precede",answer:"",report:"To come before something else."},
+{question:"Displayed",answer:"",report:"Shown publicly."},
+{question:"International law",answer:"",report:"Rules that countries follow in global relations."},
+{question:"Flagpole",answer:"",report:"A pole used to raise and display a flag."},
+{question:"Anthem",answer:"",report:"An official patriotic song of a country."},
+{question:"National song",answer:"",report:"A musical symbol representing a nation."},
+{question:"Ceremony",answer:"",report:"A formal event with traditional procedures."},
+{question:"Uniform",answer:"",report:"Official clothing worn by military members."},
+{question:"Civilians",answer:"",report:"People who are not members of the military."},
+{question:"Retreat",answer:"",report:"A military ceremony performed at the end of the day."},
+{question:"Installation",answer:"",report:"A military base or facility."},
+{question:"Bugle call",answer:"",report:"A musical signal played on a bugle."},
+{question:"To the Colors",answer:"",report:"A bugle call used to honor the national flag."},
+{question:"Lowered",answer:"",report:"Moved down from a higher position."},
+{question:"Folded",answer:"",report:"Bent or arranged into a specific shape."},
+
+{question:"Decision",answer:"",report:"A choice made after thinking carefully."},
+{question:"Financial",answer:"",report:"Related to money or finances."},
+{question:"Factors",answer:"",report:"Elements that influence a decision."},
+{question:"Cost",answer:"",report:"The amount of money needed to buy or rent something."},
+{question:"Location",answer:"",report:"The place where something is situated."},
+{question:"Utilities",answer:"",report:"Services such as electricity, gas, and water."},
+{question:"Appearance",answer:"",report:"The way something looks."},
+{question:"Property",answer:"",report:"Land or buildings owned by someone."},
+{question:"Advantages",answer:"",report:"Positive aspects or benefits."},
+{question:"Responsibilities",answer:"",report:"Duties or obligations that a person must fulfill."},
+{question:"Evaluate",answer:"",report:"To examine something carefully before making a decision."},
+{question:"Rent",answer:"",report:"Money paid regularly to live in someone else’s property."},
+{question:"Lease",answer:"",report:"A legal contract to rent property for a specific time."},
+{question:"Income",answer:"",report:"Money received regularly from work or other sources."},
+{question:"Mortgage",answer:"",report:"A loan used to buy a house."},
+{question:"Property taxes",answer:"",report:"Government taxes paid by property owners."},
+{question:"Insurance",answer:"",report:"Financial protection against loss or damage."},
+{question:"Maintenance",answer:"",report:"Regular care to keep something in good condition."},
+{question:"Repairs",answer:"",report:"Work done to fix something broken."},
+{question:"Furnished",answer:"",report:"Containing furniture."},
+{question:"Unfurnished",answer:"",report:"Without furniture."},
+{question:"Furniture",answer:"",report:"Items such as chairs, beds, and tables used in a home."},
+{question:"Rental agreement",answer:"",report:"A contract between a tenant and a landlord."},
+{question:"Garbage collection",answer:"",report:"A service that removes household waste."},
+{question:"Neighborhood",answer:"",report:"An area where people live."},
+{question:"Security",answer:"",report:"Protection or safety from danger or crime."},
+{question:"Mobility",answer:"",report:"The ability to move or relocate easily."},
+{question:"Commitment",answer:"",report:"A long-term obligation or responsibility."},
+{question:"Market conditions",answer:"",report:"Economic factors that affect prices and sales."},
+{question:"Renovations",answer:"",report:"Improvements or changes made to a building."}
+
+]
+
+let current = 0
+
+
+/* ===============================
+RENDER
+================================ */
+
+function render(){
+
+const question = document.getElementById("question")
+const report = document.getElementById("report")
+const card = document.getElementById("card")
+
+if(!question || !report || !card) return
+
+question.innerHTML = `
+<strong>${cards[current].question}</strong>
+`
+
+report.innerHTML = `
+${cards[current].report}
+`
+
+card.classList.remove("flipped")
+
+const progressText = document.getElementById("progressText")
+const progressFill = document.getElementById("progressFill")
+
+if(progressText && progressFill){
+
+progressText.textContent = `Card ${current+1} / ${cards.length}`
+
+const percent = ((current+1)/cards.length)*100
+progressFill.style.width = percent + "%"
+
+}
+
+}
+
+
+/* ===============================
+FLIP
+================================ */
+
+window.flipCard = function(){
+const card = document.getElementById("card")
+if(card) card.classList.toggle("flipped")
+}
+
+
+/* ===============================
+NEXT / PREVIOUS
+================================ */
+
+window.nextCard = function(){
+
+current++
+
+if(current >= cards.length){
+current = 0
+}
+
+render()
+
+}
+
+window.prevCard = function(){
+
+current--
+
+if(current < 0){
+current = cards.length - 1
+}
+
+render()
+
+}
+
+
+/* ===============================
+KEYBOARD CONTROLS
+================================ */
+
+function handleKeys(e){
+
+if(e.code === "Space"){
+e.preventDefault()
+flipCard()
+}
+
+if(e.code === "ArrowRight"){
+nextCard()
+}
+
+if(e.code === "ArrowLeft"){
+prevCard()
+}
+
+}
+
+document.addEventListener("keydown", handleKeys)
+
+
+/* ===============================
+START
+================================ */
+
+render()
+
+})();
+</script>
